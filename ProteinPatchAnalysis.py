@@ -25,6 +25,11 @@ def res_cog(residue):
     cog = np.mean(coord,axis=0)
     return cog
 
+# Calculate density felt at a point from a distance from an atom center:
+def atom_density(distance,std):
+    density = np.exp(-distance**2/(2*std**2))
+    return density
+
 start = time.time()
 
 # Settings
