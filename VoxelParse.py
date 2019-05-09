@@ -24,6 +24,10 @@ import pickle
 from mpl_toolkits.mplot3d import Axes3D
 import os
 
+# Garde Group Scripts:
+import voxelize_functions
+from voxelize_functions import *
+
 
 from Bio.PDB.PDBParser import PDBParser
 parser = PDBParser(PERMISSIVE=1)
@@ -112,10 +116,10 @@ for item in all_files:
                     print('WARNINGWARNINGWARNING: Unknown Atom:',atom.get_name()[0])
     
     pname = structure_id + '.pickle'
-    picklename = os.path.join(pickle_path,pname)    
-    pickle_out = open(picklename,"wb")
-    pickle.dump([carbon_density,nitrogen_density,oxygen_density,sulfur_density], pickle_out)
-    pickle_out.close()
+    #picklename = os.path.join(pickle_path,pname)    
+    #pickle_out = open(picklename,"wb")
+    #pickle.dump([carbon_density,nitrogen_density,oxygen_density,sulfur_density], pickle_out)
+    #pickle_out.close()
 
 end = time.time()
 

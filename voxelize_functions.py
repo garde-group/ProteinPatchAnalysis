@@ -26,3 +26,9 @@ parser = PDBParser(PERMISSIVE=1)
 def atom_density(distance,std):
     density = np.exp(-distance**2/(2*std**2))
     return density
+
+# Calculate center of geometry for a given residue:
+def res_cog(residue):
+    coord = [residue.get_list()[i].get_coord() for i in range(0,np.shape(residue.get_list())[0])]
+    cog = np.mean(coord,axis=0)
+    return cog
