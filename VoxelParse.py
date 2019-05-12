@@ -118,10 +118,10 @@ for item in all_files:
                     print('WARNINGWARNINGWARNING: Unknown Atom:',atom.get_name()[0])
     
     pname = structure_id + '.pickle'
-    #picklename = os.path.join(pickle_path,pname)    
-    #pickle_out = open(picklename,"wb")
-    #pickle.dump([carbon_density,nitrogen_density,oxygen_density,sulfur_density], pickle_out)
-    #pickle_out.close()
+    picklename = os.path.join(pickle_path,pname)    
+    pickle_out = open(picklename,"wb")
+    pickle.dump([carbon_density,nitrogen_density,oxygen_density,sulfur_density], pickle_out)
+    pickle_out.close()
 
 print('Unprocessed files: ',(len(all_files)-proc_file))
 
