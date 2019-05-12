@@ -40,7 +40,8 @@ cutoff = 10 # Cutoff (beyond which a point cannot feel an atom) (angstroms)
 std = 1.0 #standard deviation for gaussian
 dx = 0.5 # voxel size
 side_length = 10 # patch size in angstroms
-
+# Defaults:
+proc_file = 0
 
 # Load in PDB files:-----------------------------------------------------------
 curr_path = os.getcwd()
@@ -53,7 +54,8 @@ print(pickle_path)
 all_files = os.listdir(pdb_path)
 for item in all_files:
     file, extension = os.path.splitext(item)
-    if (extension == '.pdb'):
+    if ((extension == '.pdb')&(file[-6:]=='-clean')):
+        proc_file +=1
         structure_id = file
         filename = os.path.join(pdb_path,item)
         structure = parser.get_structure(structure_id,filename)
@@ -73,7 +75,7 @@ for item in all_files:
         oxygen_density = np.zeros([np.shape(linx)[0],np.shape(liny)[0],np.shape(linz)[0]])
         sulfur_density = np.zeros([np.shape(linx)[0],np.shape(liny)[0],np.shape(linz)[0]])
 
-        for residue in structure[0][' '].get_list(): # @Camille, this part is buggy for me. 'structure.get_residues():' worked for me
+        for residue in structure.get_residues(): # @Camille, this part is buggy for me. 'structure.get_residues():' worked for me
             print('Assessing Residue', residue)
             for atom in residue.get_list():
                 #print(atom.get_name()[0])
@@ -121,7 +123,8 @@ for item in all_files:
     #pickle.dump([carbon_density,nitrogen_density,oxygen_density,sulfur_density], pickle_out)
     #pickle_out.close()
 
+print('Unprocessed files: ',(len(all_files)-proc_file))
+
 end = time.time()
 
 print('Time Elapsed:',end-start)
-
