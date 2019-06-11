@@ -2,5 +2,4 @@ Folders:
 TutorialAutoencoders-- folder containing autoencoders based on tutorials
 		       (not protein patches)
 SamplePrep-- folder containing pipeline for generating array containing
-	     input samples
-
+	     input samples; inside start.sh is the master shell script
