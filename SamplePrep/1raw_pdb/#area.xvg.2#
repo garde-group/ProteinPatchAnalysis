@@ -1,0 +1,22 @@
+# This file was created Tue Jun 11 16:49:23 2019
+# by the following command:
+# g_sas_s -f 1ubq.pdb -s 1ubq.pdb -or 1ubq-clean-resarea.xvg 
+#
+# g_sas_s is part of G R O M A C S:
+#
+# GRoups of Organic Molecules in ACtion for Science
+#
+@    title "Solvent Accessible Surface"
+@    xaxis  label "Time (ps)"
+@    yaxis  label "Area (nm\S2\N)"
+@TYPE xy
+@ view 0.15, 0.15, 0.75, 0.85
+@ legend on
+@ legend box on
+@ legend loctype view
+@ legend 0.78, 0.8
+@ legend length 2
+@ s0 legend "Hydrophobic"
+@ s1 legend "Hydrophilic"
+@ s2 legend "Total"
+        -1     47.7589           0     47.7589
