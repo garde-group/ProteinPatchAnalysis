@@ -1,0 +1,17 @@
+mnist.pickle contains mnist dataset
+Histories folder contains output files
+
+Shell scripts to run on DCS Supercomputer:
+-run.sh
+-bindProcessToGpu.sh
+
+Python scripts to adjust batch size (on DCS Supercomputer):
+-batch-var.py
+-batch-var-run.py
+
+Python script versions of autoencoder notebooks:
+-MNIST_Autoencoder_Conv_Variational-Script.py
+-MNIST_Autoencoder_Dense-Script.py
+
+Plotting scripts:
+-history_plot.py
