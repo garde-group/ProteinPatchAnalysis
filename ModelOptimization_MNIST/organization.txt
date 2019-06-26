@@ -1,0 +1,10 @@
+mnist.pickle contains mnist dataset
+Histories folder contains output files
+
+Shell scripts to run on DCS Supercomputer:
+-run.sh
+-bindProcessToGpu.sh
+
+Python scripts to Optimize Parameters (on DCS Supercomputer):
+-OptimizeParams.py
+-ConvVAE_func.py
