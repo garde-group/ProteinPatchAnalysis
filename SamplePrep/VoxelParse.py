@@ -29,6 +29,7 @@ import voxelize_functions
 from voxelize_functions import *
 import atom_types
 from atom_types import atom_id
+from atom_types_pdbqt import atom_id_pdbqt
 
 
 from Bio.PDB.PDBParser import PDBParser
@@ -44,7 +45,7 @@ cutoff = 10 # Cutoff (beyond which a point cannot feel an atom) (angstroms)
 std = 1.0 #standard deviation for gaussian
 dx = 0.5 # voxel size
 buffer = 20 # Buffer size around edges of protein in angstroms
-n_atomtypes = 4 # Number of types of atoms, must be aligned with atom_types.py
+n_atomtypes = 10 # Number of types of atoms, must be aligned with atom_types.py
 
 # Initialize:
 proc_file = 0 #number of files processed
@@ -63,12 +64,19 @@ for item in all_files:
     file, extension = os.path.splitext(item)
     if ((extension == '.pdb')&(file[-6:]=='-clean')):
         proc_file +=1
+        # Note that this section requires installation of MGLtools and pythonsh needs to be stored at the following location:
+        pdbqtfile = pdb_path +'/'+file+'.pdbqt'
+        os.system('/disk1/ligdesign/MGLTools/mgltools_i86Linux2_1.5.2/bin/pythonsh prepare_receptor4.py -r '+pdb_path+'/'+file+'.pdb -o ' + pdb_path +'/'+file+'.pdbqt')
+        os.system('grep ATOM '+pdbqtfile+'>'+pdb_path+'/temp')
+        os.system('sed \'s/^.\{60\}/& /\' '+pdb_path+ '/temp > '+ pdbqtfile)
+        #os.system('mv '+pdb_path+ '/temp '+pdbqtfile)
+        pdbqt = read_data(pdbqtfile)
         
         print('Processing File', proc_file, file)
         
         structure_id = file
         filename = os.path.join(pdb_path,item)
-        structure = parser.get_structure(structure_id,filename)
+        structure = parser.get_structure(structure_id,pdbqtfile) #filename)
        
 ## Populate a grid with atomic densities:--------------------------------------
         # Define grid edges
@@ -101,10 +109,21 @@ for item in all_files:
         
         occupancy = np.zeros([n_atomtypes,np.shape(linx)[0],np.shape(liny)[0],np.shape(linz)[0]])
         
-        for residue in list(structure.get_residues())[0:10]: # Limited to residues 1:10 for time only
+        for residue in list(structure.get_residues()): # Limited to residues 1:10 for time only
             print('Assessing Residue', residue)
             for atom in residue.get_list():
-                id_mat = atom_id(atom)
+                #print(atom.serial_number)
+                atom_name = pdbqt.iloc[np.where(pdbqt[1].astype(float)==atom.serial_number)[0]].values[0][-1]
+                id_mat = atom_id_pdbqt(atom_name)
+                #print(pdbqt.loc[atom.serial_number-1][12])
+                #print(id_mat)
+                if np.sum(id_mat)!=1.0:
+                    print('ERROR: Encountered Undocumented Atom Type: ',atom_name)
+                    print(pdbqt.loc[atom.serial_number-1])
+
+            
+                #id_mat = atom_id_pdbqt(atom)
+                #print(id_mat)
                 for i in range(0,n_atomtypes):
                     if id_mat[i]==1:
                         atomcoord = atom.get_coord()

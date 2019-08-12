@@ -1,10 +1,10 @@
-# This file was created Tue Jun 11 16:49:45 2019
+# This file was created Tue Jul 30 10:27:51 2019
 # by the following command:
 # g_sas_s -f 1ubq.pdb -s 1ubq.pdb -or 1ubq-clean-resarea.xvg 
 #
 # g_sas_s is part of G R O M A C S:
 #
-# Gromacs Runs One Microsecond At Cannonball Speeds
+# Gromacs Runs On Most of All Computer Systems
 #
 @    title "Area per residue over the trajectory"
 @    xaxis  label "Residue"

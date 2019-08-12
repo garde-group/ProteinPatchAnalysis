@@ -23,6 +23,9 @@ import pickle
 from mpl_toolkits.mplot3d import Axes3D
 import os
 
+from Bio.PDB.PDBParser import PDBParser
+parser = PDBParser(PERMISSIVE=1)
+
 start = time.time()
 proc_file=0
 
@@ -60,26 +63,30 @@ for item in all_files:
         if exists:
             proc_file +=1
             
-            print('Processing File', proc_file)
+            print('Processing File', proc_file, file)
             # Read SASA data from pdb:
-            os.system('rm -rf temp')
+            #os.system('rm -rf temp')
             
             os.system('awk \'/^[^#|@]/{printf \"%f8\\n\", $2}\' '+pdb_path+'/'+file+'-resarea.xvg > temp1')
-            os.system('awk \'{if ($6!=a) print $4;a=$6}\' '+pdb_path+'/'+item+' >temp2')
-            os.system('paste temp2 temp1 >temp3')
-    
-            res_area = read_data('temp3')
+            #os.system('awk \'{if ($6!=a) print $4;a=$6}\' '+pdb_path+'/'+item+' >temp2')
+            structure_clean = parser.get_structure(file,pdb_path+'/'+file+'.pdb')
+            res_list = [residue.get_resname() for residue in list(structure_clean.get_residues())]
+            #os.system('paste temp2 temp1 >temp3')
+            res_area = read_data('temp1')
+            #test2 = read_data('temp2')
+            #res_area = read_data('temp3')
+            res_area['resn_name'] = res_list 
             os.system('rm -rf temp*')
             
-            res_area[1] = res_area[1].astype(float)
+            res_area[0] = res_area[0].astype(float)
         
             # Calculate percent SASA:
-            res_ref = [sasa_dict[res_area.values[i][0]] for i in range(0,np.shape(res_area.values)[0])]
+            res_ref = [sasa_dict[res_area.values[i][1]] for i in range(0,np.shape(res_area.values)[0])]
         
      
             res_area['Ref'] = res_ref
             
-            res_area['Percent'] = res_area[1]/res_area['Ref']
+            res_area['Percent'] = res_area[0]/res_area['Ref']
             decimals = pd.Series([2,2,2], index = [1, 'Ref', 'Percent'])
      
             res_area = res_area.round(decimals)
@@ -88,4 +95,6 @@ for item in all_files:
 
 
 
+end_time = time.time()
 
+print('Time Elapsed:',end_time-start)

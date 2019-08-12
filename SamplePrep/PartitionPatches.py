@@ -32,8 +32,8 @@ start = time.time()
 
 # Settings:-------------------------------------------------------------------
 side_length = 25 # Number of voxels in patch
-full_length = side_length*2-1
-n_atomtypes = 4 # Number of types of atoms, must be aligned with atom_types.py
+full_length = side_length*2
+n_atomtypes = 10 # Number of types of atoms, must be aligned with atom_types.py
 buffer = 20 # Buffer size around edges of protein in angstroms
 dx = 0.5 # voxel size
 exposure_cutoff = 0.3 # Fractional SASA exposure above which patches are included
@@ -59,6 +59,8 @@ pickle_path = os.path.join(curr_path,'3pickle_perpdb')
 combined_path = os.path.join(curr_path,'4pickle_combined')
 all_pickles = os.listdir(pickle_path)
 
+k=1
+patchnum=0
 
 for item in all_pickles: 
     file, extension = os.path.splitext(item)
@@ -68,7 +70,9 @@ for item in all_pickles:
         pickle_in = open(pickle_path+'/'+item,"rb")
         occupancy = pickle.load(pickle_in)
         structure = parser.get_structure(file,pdb_path+'/'+file+'.pdb')
-        
+        print(item,k)
+        k+=1
+        start_proc=time.time()
         
         # Define grid edges from structure:
         coord_list = [atom.coord for atom in structure.get_atoms()]
@@ -92,8 +96,8 @@ for item in all_pickles:
         liny = np.arange(ymin,ymax,dx)
         linz = np.arange(zmin,zmax,dx)        
 
-        j=0
-        for residue in list(structure.get_residues())[0:10]:
+        j=-1
+        for residue in list(structure.get_residues()):
             j+=1
             
             exists = os.path.isfile(pickle_path+'/sasa-'+file+'.dat')
@@ -118,22 +122,18 @@ for item in all_pickles:
                     z_start=np.where((linz>vox_start[2])&(linz<vox_end[2]))[0][0]
                     z_end=np.where((linz>vox_start[2])&(linz<vox_end[2]))[0][-1]
                     
-                    patch = occupancy[:,x_start:x_end,y_start:y_end,z_start:z_end]
-                    patch = np.reshape(patch,(1,n_atomtypes,full_length,full_length,full_length))
-                    Patches = np.concatenate([Patches,patch],axis=0)
-            
-pname = 'all_patches.pickle'
-picklename = os.path.join(combined_path,pname)    
-pickle_out = open(picklename,"wb")
-pickle.dump(Patches, pickle_out)
-pickle_out.close()
-
-# Axis convention: 
-# 1: Sample axis
-# 2: Color axis (atom identity)
-# 3-5: Cartesian axes      
-
-    
+                    patch = occupancy[:,x_start:(x_end+1),y_start:(y_end+1),z_start:(z_end+1)]
+                   
+                    
+                    if np.shape(patch)==(n_atomtypes, 50, 50, 50):
+                        pname='patch'+ str(patchnum)+'.pickle'
+                        patchnum+=1
+                        picklename = os.path.join(combined_path,pname) 
+                        pickle_out = open(picklename,"wb")
+                        pickle.dump(patch,pickle_out)
+                        pickle_out.close()
+                        
+                        
 end = time.time()
 
 print('Time Elapsed:',end-start)

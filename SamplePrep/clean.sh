@@ -22,7 +22,8 @@ for i in *.pdb
 do
     pdb="$i"
     fname=${pdb%.*}
-        pdb4amber -i $raw/$i -o $temp/$fname"-clean.pdb" --dry #--reduce
+        pdb4amber -i $raw/$i -o $temp/$fname"-clean-nohyd.pdb" --dry
+	reduce $temp/$fname"-clean-nohyd.pdb" > $temp/$fname"-clean.pdb"
 done
 
 cd $curr

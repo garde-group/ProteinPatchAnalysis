@@ -39,4 +39,14 @@ def res_cog(residue):
     cog = np.mean(coord,axis=0)
     return cog
 
+# Oneliner to read xvg file ====================================
+def read_data(fname):
+    data = [ [i for i in line.split()]
+             for line in open(fname).readlines()
+             if line[0] not in ['#','@'] and len(line.rstrip()) > 0 and
+             line.split()[0][0] not in ['#', '@'] ]
+    data = pd.DataFrame(data)
+    return data
+
+
 

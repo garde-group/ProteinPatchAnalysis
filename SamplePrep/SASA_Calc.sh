@@ -22,8 +22,8 @@ do
     fname=${pdb%.*}
 
     rm -rf input
-    echo '0' >> input
-    echo '0' >>input
+    echo '1' >> input
+    echo '1' >>input
 
     g_sas_s -f $i -s $i -or $fname-clean-resarea.xvg < input
     cp $fname-clean-resarea.xvg $clean

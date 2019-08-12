@@ -3,10 +3,14 @@ ARG   2.41
 ASN   1.58
 ASP   1.51
 CYS   1.40
+CYX   1.40
 GLN   1.89   
 GLU   1.83
 GLY   0.85
 HIS   1.94
+HIE   1.94
+HID   1.94
+HIP   1.94
 ILE   1.82
 LEU   1.80
 LYS   2.11
